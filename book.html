@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Book — Sausage Therapy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="index.html">Sausage <span>Therapy</span></a>
+    <div class="nav-links">
+      <a href="offers.html">Offers</a>
+      <a href="membership.html">Membership</a>
+      <a href="impact.html">Impact</a>
+      <a href="journal.html">Journal</a>
+    </div>
+  </nav>
+  <section class="section">
+    <p class="kicker">Enquiry, not a waiting list fantasy</p>
+    <h1>Tell the dogs what you need.</h1>
+    <div class="card-grid" style="grid-template-columns: 1.1fr 0.9fr">
+      <form id="book">
+        <label>Name<input name="name" required /></label>
+        <label>Email<input type="email" name="email" required /></label>
+        <label>Phone<input name="phone" /></label>
+        <label>Offer
+          <select name="offer">
+            <option>Presence session — $180</option>
+            <option>Pack at the office — $950</option>
+            <option>NDIS-aligned supported visit</option>
+            <option>Pack membership</option>
+            <option>Something else</option>
+          </select>
+        </label>
+        <label>Preferred date<input type="date" name="date" /></label>
+        <label>Location / postcode<input name="place" placeholder="Noosa, Brisbane, Mitchell, online" /></label>
+        <label>What is going on<textarea name="story" rows="5" placeholder="A few honest lines. The dogs do not need a perfect brief."></textarea></label>
+        <button class="btn" type="submit">Send enquiry</button>
+        <p class="note" id="status">Opens your email with the brief filled in, and saves a copy in this browser.</p>
+      </form>
+      <aside class="panel">
+        <h2>What happens next</h2>
+        <p>You get a reply with availability, travel note, and payment path. Sessions are confirmed only after a short handler check — dog welfare outranks the calendar.</p>
+        <p>Payment: bank transfer or card link once the time is locked. Membership is separate and starts the day you say yes.</p>
+        <p class="note">Privacy: this page does not send data to a third-party server. It uses your mail app. Do not include medical record numbers.</p>
+      </aside>
+    </div>
+  </section>
+  <script>
+    document.getElementById("book").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target).entries());
+      const leads = JSON.parse(localStorage.getItem("st-leads") || "[]");
+      leads.push(Object.assign({}, data, { at: new Date().toISOString() }));
+      localStorage.setItem("st-leads", JSON.stringify(leads));
+      const body = encodeURIComponent("Sausage Therapy enquiry\n\n" + Object.entries(data).map(function (pair) { return pair[0] + ": " + pair[1]; }).join("\n"));
+      document.getElementById("status").textContent = "Saved on this device. Your email app should open now — send it.";
+      window.location.href = "mailto:hello@sausagetherapy.com?subject=" + encodeURIComponent("Sausage Therapy enquiry — " + data.offer) + "&body=" + body;
+    });
+  </script>
+</body>
+</html>
